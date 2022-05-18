@@ -5,7 +5,7 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: XXX
+      repoURL: https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure.git
       revision: HEAD
       directories:
       - path: apps/*
@@ -16,7 +16,7 @@ spec:
     spec:
       project: apps
       source:
-        repoURL: XXX
+        repoURL: https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure.git
         targetRevision: HEAD
         path: '{{path}}'
         helm:
