@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: core 
+spec:
+  generators:
+  - git:
+      repoURL: XXX
+      revision: HEAD
+      directories:
+      - path: core/*
+      - path: core/RBAC/*
+      - path: core/jobs/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: core 
+      source:
+        repoURL: XXX
+        targetRevision: HEAD
+        path: '{{path}}'
+        helm:
+          valueFiles:
+          - values-nocp.yaml
+      destination:
+        server: https://kubernetes.default.svc

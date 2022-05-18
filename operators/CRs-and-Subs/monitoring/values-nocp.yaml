@@ -1,0 +1,8 @@
+required: true
+userWorkloads: true 
+persistent: false 
+
+
+########### Uncomment the following values when "persistent: true" ################
+#storageSize: 4Gi
+#storageClassName: xfs

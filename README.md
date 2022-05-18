@@ -1,20 +1,45 @@
 
+# Intro
+
 # Prerequisites 
-1. Install the Openshift GitOps Operator
+## 1. Install the Openshift GitOps Operator
 ![1](https://user-images.githubusercontent.com/60185557/169025130-e35e1306-f0d3-4d83-8162-4eee279e315c.png)
 ![2](https://user-images.githubusercontent.com/60185557/169025152-7267595a-e723-4d9b-8854-444e67150541.png)
 ![3](https://user-images.githubusercontent.com/60185557/169025164-d9bd4eeb-6342-4f0f-a03f-dad1b5d1f1dd.png)
 ![4](https://user-images.githubusercontent.com/60185557/169025168-f7a81c15-14c1-4cb3-a852-34a7da9ac285.png)
 
-3. Add cluster-admin permissions to the main Openshift-GitOps serviceAccount
-> Note! From a security point of view, the main Openshift-GitOps instance is for infrastructure management purposes, which is equivalent to Openshift admin configuring the cluster.
+---
+
+## 2. Add cluster-admin permission to the main Openshift-GitOps serviceAccount
+> **Note!** From a security point of view, the main Openshift-GitOps instance is for infrastructure management purposes, which is equivalent to Openshift admin configuring the cluster.
 ```bash
-oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
+$ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
 ```
+
+---
 
 # Architecture 
 ![architecture drawio](https://user-images.githubusercontent.com/60185557/169005408-61517f0c-eec3-451f-9497-8bce42122b44.png)
 
+---
+
+# Creating & Testing New Component
+For each new component that you want to add to the cluster, you need to:
+1. Decide in which upper-dir it should reside (core/apps/operators)
+2. Generate a new helm chart for this component
+```bash
+$ helm create <NAME>
+```
+3. Create `values-<env>.yaml` for each environment you want - nocp, pocp, etc. with the proper variables for this component with correlation to this environment.
+> The most important value is `required` that will define if the chart's objects should be deployed on this cluster or not.
+4. Create in the `templates` dir the yaml files that this component is comprised of. Each such yaml file should start with `{{- if .Values.required }}` and end with `{{- end }}`
+5. Run the following command in the directory where the files `Chart.yaml` and `values-<env>.yaml` are located, if it works, the chart is complete.
+```bash
+$ helm template . -f values-<env>.yaml
+```
+> If you made a change in one of the `values-<env>.yaml` files, test it in the same manner.
+
+---
 
 # Tree Structure
 ```

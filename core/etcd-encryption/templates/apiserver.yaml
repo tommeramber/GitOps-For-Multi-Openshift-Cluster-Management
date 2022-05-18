@@ -1,0 +1,9 @@
+{{- if .Values.required }}
+apiVersion: config.openshift.io/v1
+kind: APIServer
+metadata:
+  name: cluster
+spec:
+  encryption:
+    type: aescbc
+{{- end }}

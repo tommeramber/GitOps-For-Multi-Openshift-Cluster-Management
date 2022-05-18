@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+spec:
+  generators:
+  - git:
+      repoURL: XXX
+      revision: HEAD
+      directories:
+      - path: apps/*
+      - path: apps/helm-operators/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: apps
+      source:
+        repoURL: XXX
+        targetRevision: HEAD
+        path: '{{path}}'
+        helm:
+          valueFiles:
+          - values-nocp.yaml
+      destination:
+        server: https://kubernetes.default.svc
