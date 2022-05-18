@@ -1,9 +1,19 @@
+
+# Prerequisites 
+1. Install the Openshift GitOps Operator
+2. Add cluster-admin permissions to the main Openshift-GitOps serviceAccount
+> Note! From a security point of view, the main Openshift-GitOps instance is for infrastructure management purposes, which is equivalent to Openshift admin configuring the cluster.
 ```bash
 oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
 ```
 
+# Architecture 
+![architecture drawio](https://user-images.githubusercontent.com/60185557/169005408-61517f0c-eec3-451f-9497-8bce42122b44.png)
 
-argo
+
+# Tree Structure
+```
+main
 ├── apps
 │   ├── helm-operators
 │   │   └── grafana
@@ -51,20 +61,21 @@ argo
 │       ├── roles_and_bindings
 │       ├── SCCs
 │       └── serviceaccounts
-├── operators
-│   ├── catalogsources
-│   ├── CRs-and-Subs
-│   │   ├── monitoring
-│   │   │   ├── Chart.yaml
-│   │   │   ├── templates
-│   │   │   │   └── cluster-monitoring-config.yaml
-│   │   │   └── values-nocp.yaml
-│   │   └── serverless
-│   │       └── serverless
-│   │           ├── Chart.yaml
-│   │           ├── templates
-│   │           │   └── subscription.yaml
-│   │           ├── values-nocp.yaml
-│   │           └── values-pocp.yaml
-│   └── imagecontentsourcepolicies
+└── operators
+    ├── catalogsources
+    ├── CRs-and-Subs
+    │   ├── monitoring
+    │   │   ├── Chart.yaml
+    │   │   ├── templates
+    │   │   │   └── cluster-monitoring-config.yaml
+    │   │   └── values-nocp.yaml
+    │   └── serverless
+    │       └── serverless
+    │           ├── Chart.yaml
+    │           ├── templates
+    │           │   └── subscription.yaml
+    │           ├── values-nocp.yaml
+    │           └── values-pocp.yaml
+    └── imagecontentsourcepolicies
 
+```
