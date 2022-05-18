@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: operators
+spec:
+  generators:
+  - git:
+      repoURL: XXX
+      revision: HEAD
+      directories:
+      - path: operators/*
+      - path: operators/CRs-and-Subs/*
+  template:
+    metadata:
+      name: '{{path.basename}}'
+    spec:
+      project: operators
+      source:
+        repoURL: XXX
+        targetRevision: HEAD
+        path: '{{path}}'
+      destination:
+        server: https://kubernetes.default.svc

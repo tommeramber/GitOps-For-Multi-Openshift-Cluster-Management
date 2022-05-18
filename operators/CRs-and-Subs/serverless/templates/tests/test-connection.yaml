@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: "{{ include "serverless.fullname" . }}-test-connection"
+  labels:
+    {{- include "serverless.labels" . | nindent 4 }}
+  annotations:
+    "helm.sh/hook": test-success
+spec:
+  containers:
+    - name: wget
+      image: busybox
+      command: ['wget']
+      args: ['{{ include "serverless.fullname" . }}:{{ .Values.service.port }}']
+  restartPolicy: Never
