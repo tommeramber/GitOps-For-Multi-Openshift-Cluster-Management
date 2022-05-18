@@ -1,4 +1,3 @@
-
 # Intro
 
 # Prerequisites 
@@ -16,6 +15,13 @@
 $ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
 ```
 
+3. Clone this repo and apply the following files based on your env (nocp, pocp, etc.)
+```bash
+$ cd ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/argo-objects
+$ oc apply -f projects/*
+# oc apply -f applicationsets/<env>/* 
+$ oc apply -f applicationsets/nocp/* #Example
+```
 ---
 
 # Architecture 
