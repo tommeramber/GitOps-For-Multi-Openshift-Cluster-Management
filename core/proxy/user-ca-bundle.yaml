@@ -1,0 +1,10 @@
+{{- if .Values.required  }} 
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-ca-bundle
+  namepsace: openshift-config
+data:
+  ca-bundle.crt: |
+{{ .Files.Get "files/ca.crt" | indent 4 }}
+{{- end }}

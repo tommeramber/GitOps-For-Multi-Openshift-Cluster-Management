@@ -19,5 +19,8 @@ spec:
         repoURL: XXX
         targetRevision: HEAD
         path: '{{path}}'
+        helm:
+          valueFiles:
+          - values-nocp.yaml
       destination:
         server: https://kubernetes.default.svc
