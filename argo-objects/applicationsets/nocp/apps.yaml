@@ -2,6 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: apps
+  namespace: openshift-gitops
 spec:
   generators:
   - git:
@@ -24,3 +25,5 @@ spec:
           - values-nocp.yaml
       destination:
         server: https://kubernetes.default.svc
+      syncPolicy:
+        automated: {}
