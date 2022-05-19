@@ -3,4 +3,4 @@ htpasswd: true
 
 
 ########### Uncomment the following values when "htpasswd: true" ################
-htpasswdSecretName: htpasswd-secret
+htpasswdSecretName: my-htpasswd-secret
