@@ -4,6 +4,8 @@ kind: Subscription
 metadata:
   name: gatekeeper
   namespace: openshift-operators
+  annotations:
+    argocd.argoproj.io/hook: PreSync
 spec:
   channel: stable
   name: gatekeeper-operator-product
