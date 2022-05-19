@@ -1,0 +1,9 @@
+{{- if .Values.required }}
+apiVersion: operator.gatekeeper.sh/v1alpha1
+kind: Gatekeeper
+metadata:
+  name: gatekeeper
+spec:
+  mutatingWebhook: {{ .Values.mutating }}
+  validatingWebhook: {{ .Values.validating }} 
+{{- end }}
