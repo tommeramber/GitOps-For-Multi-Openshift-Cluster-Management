@@ -148,4 +148,4 @@ main
 
 # Tips & Tricks
 
-1. [IgnoreExtraneous]()
+1. [IgnoreExtraneous](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/IgnoreExtraneous)
