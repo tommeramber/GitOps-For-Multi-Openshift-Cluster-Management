@@ -3,6 +3,7 @@ apiVersion: operator.gatekeeper.sh/v1alpha1
 kind: Gatekeeper
 metadata:
   name: gatekeeper
+  namespace: openshift-gatekeeper-operator
 spec:
   mutatingWebhook: {{ .Values.mutating }}
   validatingWebhook: {{ .Values.validating }} 

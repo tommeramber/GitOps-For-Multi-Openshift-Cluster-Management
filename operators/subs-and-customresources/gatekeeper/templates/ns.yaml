@@ -1,0 +1,9 @@
+{{- if .Values.required }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: openshift-gatekeeper-operator
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "0"
+{{- end }}

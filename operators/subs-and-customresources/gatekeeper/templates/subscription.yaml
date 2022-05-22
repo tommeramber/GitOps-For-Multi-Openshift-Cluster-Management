@@ -2,13 +2,11 @@
 apiVersion: operators.coreos.com/v1alpha1
 kind: Subscription
 metadata:
-  name: gatekeeper
-  namespace: openshift-operators
-  annotations:
-    argocd.argoproj.io/hook: PreSync
+  name: gatekeeper-operator-sub
+  namespace: openshift-gatekeeper-operator
 spec:
   channel: stable
-  name: gatekeeper-operator-product
-  source: redhat-operators
-  sourceNamespace: openshift-marketplace
+  name: gatekeeper-operator
+  source: gatekeeper-operator
+  sourceNamespace: openshift-gatekeeper-operator
 {{- end }}

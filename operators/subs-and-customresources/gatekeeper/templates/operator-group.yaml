@@ -1,0 +1,10 @@
+{{- if .Values.required }}
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: gatekeeper-operator
+  namespace: openshift-gatekeeper-operator
+  annotations:
+    argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/sync-wave: "1"
+{{- end }}
