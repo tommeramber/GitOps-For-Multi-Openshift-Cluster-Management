@@ -8,5 +8,5 @@ spec:
   channel: stable
   name: gatekeeper-operator
   source: redhat-operators
-  sourceNamespace: openshift-gatekeeper-operator
+  sourceNamespace: openshift-marketplace
 {{- end }}
