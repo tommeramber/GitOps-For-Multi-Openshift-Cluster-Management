@@ -31,9 +31,11 @@ We have 4 main directories relevant for this solution;
 1. [Core](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/core) - Every built-in component in Openshift/Kubernetes 
 2. [Operators](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/operators) - Everything related to OLM operators, including imageContentSourcePolicies (ICSP), catalogSources , Subscriptions, CustomResources relevant for the specific Operator, etc. 
 3. [Apps](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/apps) - Everything extra i.e. PersistentStorage 3rd Party CSI (e.g. Trident), helm operators / deployments for PaaS teams (e.g. Grafana, SealedSecrets, metricbeat, etc.)
-4. [Argo-Objects](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects) - **This is the main directory that we are going to use with this project**; It holds 2 things we must work with in Argo - 1 `projects` 2 `applicationsets`.
-4.1. **Argo Projects** - Logical separation to envrionments inside Argo; It can be used purely for organizing your apps and you can grant access to other teams in your organization to specific projects. In our case there is going to be a project per repo dir (core, apps, operators).
-4.2. **Argo ApplicationSets** - Points ArgoCD to directories that holds our components, and it will create Argo Application for each of our charts, based on the `values-<env>.yaml` file with for our specific environment. In our case there is going to be an applicationset per repo dir (core, apps, operators).
+4. [Argo-Objects](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects) - **This is the main directory that we are going to use with this project**; It holds 2 things we must work with in Argo - 
+
+   4.1. **Argo Projects** - Logical separation to envrionments inside Argo; It can be used purely for organizing your apps and you can grant access to other teams in your organization to specific projects. In our case there is going to be a project per repo dir (core, apps, operators).
+   
+   4.2. **Argo ApplicationSets** - Points ArgoCD to directories that holds our components, and it will create Argo Application for each of our charts, based on the `values-<env>.yaml` file with for our specific environment. In our case there is going to be an applicationset per repo dir (core, apps, operators).
 
 
 # Instructions 
@@ -80,34 +82,26 @@ $ helm template . -f values-<env>.yaml
 
 # Tree Structure
 ```
-main
+.
 ├── apps
 │   ├── helm-operators
-│   │   └── grafana
+│   │   ├── grafana
+│   │   └── sealedsecerts
 │   ├── metricbeat
 │   └── trident
 ├── argo-objects
 │   ├── applicationsets
 │   │   └── dev-ocp
-│   │       ├── apps-applicationset.yaml
-│   │       ├── core-applicationset.yaml
-│   │       └── operators-applicationset.yaml
+│   │       ├── apps.yaml
+│   │       ├── core.yaml
+│   │       └── operators.yaml
 │   └── projects
-│       ├── apps-project.yaml
-│       ├── core-project.yaml
-│       └── operators-project.yaml
+│       ├── apps.yaml
+│       ├── core.yaml
+│       └── operators.yaml
 ├── core
 │   ├── 500pods
-│   │   ├── Chart.yaml
-│   │   ├── README.md
-│   │   ├── templates
-│   │   │   └── job.yaml
-│   │   └── values-dev-ocp.yaml
 │   ├── dnsforwarder
-│   │   ├── Chart.yaml
-│   │   ├── templates
-│   │   │   └── dnsforwarder.yaml
-│   │   └── values-dev-ocp.yaml
 │   ├── etcd-encryption
 │   │   ├── Chart.yaml
 │   │   ├── templates
@@ -116,35 +110,52 @@ main
 │   ├── jobs
 │   │   ├── etcdbackup_cronjob
 │   │   └── ldap-sync
+│   ├── machine-config-pools
 │   ├── machineconfigs
-│   │   ├── Chart.yaml
-│   │   ├── templates
-│   │   │   └── automatic-kubelet-reservation.yaml
-│   │   └── values-dev-ocp.yaml
 │   ├── oauth
+│   │   ├── Chart.yaml
+│   │   ├── files
+│   │   │   ├── create_htpasswd.sh
+│   │   │   └── htpasswd
+│   │   ├── templates
+│   │   │   ├── htpasswd-secret.yaml
+│   │   │   └── oauth.yaml
+│   │   └── values-dev-ocp.yaml
 │   ├── project-bootstrap-template
 │   ├── proxy
-│   └── RBAC
-│       ├── roles_and_bindings
-│       ├── SCCs
-│       └── serviceaccounts
+│   │   ├── Chart.yaml
+│   │   ├── files
+│   │   │   ├── ca.crt
+│   │   │   ├── ca.key
+│   │   │   ├── create-ca.sh
+│   │   │   └── csr_answer.txt
+│   │   ├── templates
+│   │   │   ├── proxy.yaml
+│   │   │   └── user-ca-bundle.yaml
+│   │   └── values-dev-ocp.yaml
+│   ├── rbac
+│   │   ├── self-provisioner
+│   │   │   ├── Chart.yaml
+│   │   │   ├── templates
+│   │   │   │   └── disable-self-provisioners.yaml
+│   │   │   └── values-dev-ocp.yaml
+│   │   └── serviceaccounts
+│   └── scc
 └── operators
     ├── catalogsources
-    ├── CRs-and-Subs
-    │   ├── monitoring
-    │   │   ├── Chart.yaml
-    │   │   ├── templates
-    │   │   │   └── cluster-monitoring-config.yaml
-    │   │   └── values-dev-ocp.yaml
-    │   └── serverless
-    │       └── serverless
-    │           ├── Chart.yaml
-    │           ├── templates
-    │           │   └── subscription.yaml
-    │           ├── values-dev-ocp.yaml
-    │           └── values-pocp.yaml
-    └── imagecontentsourcepolicies
-
+    ├── imagecontentsourcepolicies
+    └── subs-and-customresources
+        ├── gatekeeper
+        │   ├── Chart.yaml
+        │   ├── templates
+        │   │   ├── gatekeeper-instance.yaml
+        │   │   └── subscription.yaml
+        │   └── values-dev-ocp.yaml
+        └── monitoring
+            ├── Chart.yaml
+            ├── templates
+            │   └── cluster-monitoring-config.yaml
+            └── values-dev-ocp.yaml
 ```
 
 
