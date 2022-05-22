@@ -1,34 +1,16 @@
 # Intro
 
 # Prerequisites 
-## 1. Install the Openshift GitOps Operator
-![1](https://user-images.githubusercontent.com/60185557/169025130-e35e1306-f0d3-4d83-8162-4eee279e315c.png)
-![2](https://user-images.githubusercontent.com/60185557/169025152-7267595a-e723-4d9b-8854-444e67150541.png)
-![3](https://user-images.githubusercontent.com/60185557/169025164-d9bd4eeb-6342-4f0f-a03f-dad1b5d1f1dd.png)
-![4](https://user-images.githubusercontent.com/60185557/169025168-f7a81c15-14c1-4cb3-a852-34a7da9ac285.png)
-
----
-
-## 2. Add cluster-admin permission to the main Openshift-GitOps serviceAccount
+1. [Install the Openshift GitOps Operator](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/InstallOperator)
+2. Add cluster-admin permission to the main Openshift-GitOps serviceAccount
 > **Note!** From a security point of view, the main Openshift-GitOps instance is for infrastructure management purposes, which is equivalent to Openshift admin configuring the cluster.
 ```bash
 $ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
 ```
-## 3. Access the ArgoCD UI
-```bash
-$ oc -n openshift-gitops extract secret/openshift-gitops-cluster --to=-
-```
-Copy the output and use it for login to the ArgoCD UI
-
-```bash
-$ echo https://$(oc get route -n openshift-gitops openshift-gitops-server -o json | jq -r '.spec.host')
-```
-![Screenshot from 2022-05-22 10-48-52](https://user-images.githubusercontent.com/60185557/169684787-f20db9fe-544d-442d-931c-7bdc6ba6c6d2.png)
-
-## 4. Add the repository to ArgoCD
-
-
-## 3. Clone this repo and apply the following files based on your env (nocp, pocp, etc.)
+3. [Access the ArgoCD UI](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/LoginToArgo)
+4. [Add the repository to ArgoCD](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/AddRepoToArgo)
+5. Clone this repo and change the `values-<env>.yaml` files in the different components' directories based on your environment needs
+6. Apply the following files based on your env (nocp, pocp, etc.)
 ```bash
 $ cd ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/argo-objects
 $ oc apply -f projects
