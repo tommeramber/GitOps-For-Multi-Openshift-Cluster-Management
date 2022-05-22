@@ -10,7 +10,7 @@ spec:
       revision: HEAD
       directories:
       - path: operators/*
-      - path: operators/CRs-and-Subs/*
+      - path: operators/subs-and-customresources/*
   template:
     metadata:
       name: '{{path.basename}}'

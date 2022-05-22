@@ -10,11 +10,14 @@ spec:
       revision: HEAD
       directories:
       - path: core/*
-      - path: core/RBAC/*
+      - path: core/rbac/*
       - path: core/jobs/*
   template:
     metadata:
       name: '{{path.basename}}'
+      annotations:
+        argocd.argoproj.io/compare-options: IgnoreForeignExtraneous
+        argocd.argoproj.io/sync-options: PruneForeign=false
     spec:
       project: core 
       source:
@@ -26,6 +29,3 @@ spec:
           - values-dev-ocp.yaml
       destination:
         server: https://kubernetes.default.svc
-      syncPolicy:
-        automated:
-          prune: false
