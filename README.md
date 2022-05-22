@@ -44,12 +44,12 @@ $ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argoc
 3. [Access the ArgoCD UI](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/LoginToArgo)
 4. [Add the repository to ArgoCD](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/AddRepoToArgo)
 5. Clone this repo and change the `values-<env>.yaml` files in the different components' directories based on your environment needs
-6. Apply the following files based on your env (nocp, pocp, etc.)
+6. Apply the following files based on your env (dev-ocp, pocp, etc.)
 ```bash
 $ cd ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/argo-objects
 $ oc apply -f projects
 # oc apply -f applicationsets/<env> 
-$ oc apply -f applicationsets/nocp #Example
+$ oc apply -f applicationsets/dev-ocp #Example
 ```
 ---
 
@@ -65,7 +65,7 @@ For each new component that you want to add to the cluster, you need to:
 ```bash
 $ helm create <NAME>
 ```
-3. Create `values-<env>.yaml` for each environment you want - nocp, pocp, etc. with the proper variables for this component with correlation to this environment.
+3. Create `values-<env>.yaml` for each environment you want - dev-ocp, pocp, etc. with the proper variables for this component with correlation to this environment.
 > The most important value is `required` that will define if the chart's objects should be deployed on this cluster or not.
 4. Create in the `templates` dir the yaml files that this component is comprised of. Each such yaml file should start with `{{- if .Values.required }}` and end with `{{- end }}`
 5. Run the following command in the directory where the files `Chart.yaml` and `values-<env>.yaml` are located, if it works, the chart is complete.
@@ -86,7 +86,7 @@ main
 │   └── trident
 ├── argo-objects
 │   ├── applicationsets
-│   │   └── nocp
+│   │   └── dev-ocp
 │   │       ├── apps-applicationset.yaml
 │   │       ├── core-applicationset.yaml
 │   │       └── operators-applicationset.yaml
@@ -100,17 +100,17 @@ main
 │   │   ├── README.md
 │   │   ├── templates
 │   │   │   └── job.yaml
-│   │   └── values-nocp.yaml
+│   │   └── values-dev-ocp.yaml
 │   ├── dnsforwarder
 │   │   ├── Chart.yaml
 │   │   ├── templates
 │   │   │   └── dnsforwarder.yaml
-│   │   └── values-nocp.yaml
+│   │   └── values-dev-ocp.yaml
 │   ├── etcd-encryption
 │   │   ├── Chart.yaml
 │   │   ├── templates
 │   │   │   └── apiserver.yaml
-│   │   └── values-nocp.yaml
+│   │   └── values-dev-ocp.yaml
 │   ├── jobs
 │   │   ├── etcdbackup_cronjob
 │   │   └── ldap-sync
@@ -118,7 +118,7 @@ main
 │   │   ├── Chart.yaml
 │   │   ├── templates
 │   │   │   └── automatic-kubelet-reservation.yaml
-│   │   └── values-nocp.yaml
+│   │   └── values-dev-ocp.yaml
 │   ├── oauth
 │   ├── project-bootstrap-template
 │   ├── proxy
@@ -133,13 +133,13 @@ main
     │   │   ├── Chart.yaml
     │   │   ├── templates
     │   │   │   └── cluster-monitoring-config.yaml
-    │   │   └── values-nocp.yaml
+    │   │   └── values-dev-ocp.yaml
     │   └── serverless
     │       └── serverless
     │           ├── Chart.yaml
     │           ├── templates
     │           │   └── subscription.yaml
-    │           ├── values-nocp.yaml
+    │           ├── values-dev-ocp.yaml
     │           └── values-pocp.yaml
     └── imagecontentsourcepolicies
 
