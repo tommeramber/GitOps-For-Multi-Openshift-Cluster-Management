@@ -23,7 +23,7 @@ spec:
         path: '{{path}}'
         helm:
           valueFiles:
-          - values-nocp.yaml
+          - values-dev-ocp.yaml
       destination:
         server: https://kubernetes.default.svc
       syncPolicy:
