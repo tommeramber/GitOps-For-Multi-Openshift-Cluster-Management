@@ -4,6 +4,8 @@ kind: Subscription
 metadata:
   name: gatekeeper-operator-sub
   namespace: openshift-gatekeeper-operator
+  annotations:
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   channel: stable
   name: gatekeeper-operator

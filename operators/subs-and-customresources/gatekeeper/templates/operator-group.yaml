@@ -5,6 +5,5 @@ metadata:
   name: gatekeeper-operator
   namespace: openshift-gatekeeper-operator
   annotations:
-    argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/sync-wave: "1"
 {{- end }}
