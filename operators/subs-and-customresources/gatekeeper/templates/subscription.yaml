@@ -9,4 +9,5 @@ spec:
   name: gatekeeper-operator
   source: redhat-operators
   sourceNamespace: openshift-marketplace
+  installPlanApproval: Automatic
 {{- end }}
