@@ -15,9 +15,6 @@ spec:
   template:
     metadata:
       name: '{{path.basename}}'
-      annotations:
-        argocd.argoproj.io/compare-options: IgnoreForeignExtraneous
-        argocd.argoproj.io/sync-options: PruneForeign=false
     spec:
       project: core 
       source:
@@ -29,3 +26,6 @@ spec:
           - values-dev-ocp.yaml
       destination:
         server: https://kubernetes.default.svc
+      syncPolicy:
+        automated: 
+          prune: true

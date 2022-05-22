@@ -14,9 +14,6 @@ spec:
   template:
     metadata:
       name: '{{path.basename}}'
-      annotations:
-        argocd.argoproj.io/compare-options: IgnoreForeignExtraneous
-        argocd.argoproj.io/sync-options: PruneForeign=false
     spec:
       project: apps
       source:
@@ -31,4 +28,3 @@ spec:
       syncPolicy:
         automated: 
           prune: true
-        
