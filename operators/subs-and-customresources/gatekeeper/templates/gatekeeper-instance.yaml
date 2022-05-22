@@ -1,10 +1,11 @@
-#{{- if .Values.required }}
-#apiVersion: operator.gatekeeper.sh/v1alpha1
-#kind: Gatekeeper
-#metadata:
-#  name: gatekeeper
-#  namespace: openshift-gatekeeper-operator
-#spec:
-#  mutatingWebhook: {{ .Values.mutating }}
-#  validatingWebhook: {{ .Values.validating }} 
-#{{- end }}
+{{- if .Values.required }}
+apiVersion: operator.gatekeeper.sh/v1alpha1
+kind: Gatekeeper
+metadata:
+  name: gatekeeper
+  namespace: openshift-gatekeeper-operator
+  argocd.argoproj.io/sync-wave: "2"
+spec:
+  mutatingWebhook: {{ .Values.mutating }}
+  validatingWebhook: {{ .Values.validating }} 
+{{- end }}
