@@ -14,8 +14,21 @@
 ```bash
 $ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
 ```
+## 3. Access the ArgoCD UI
+```bash
+$ oc -n openshift-gitops extract secret/openshift-gitops-cluster --to=-
+```
+Copy the output and use it for login to the ArgoCD UI
 
-3. Clone this repo and apply the following files based on your env (nocp, pocp, etc.)
+```bash
+$ echo https://$(oc get route -n openshift-gitops openshift-gitops-server -o json | jq -r '.spec.host')
+```
+
+
+
+## 4. Add the repository to ArgoCD
+
+## 3. Clone this repo and apply the following files based on your env (nocp, pocp, etc.)
 ```bash
 $ cd ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/argo-objects
 $ oc apply -f projects

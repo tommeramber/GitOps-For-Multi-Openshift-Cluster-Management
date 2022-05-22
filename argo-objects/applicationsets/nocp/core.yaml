@@ -15,9 +15,6 @@ spec:
   template:
     metadata:
       name: '{{path.basename}}'
-      annotations:
-        argocd.argoproj.io/compare-options: IgnoreExtraneous
-        argocd.argoproj.io/sync-options: Prune=false
     spec:
       project: core 
       source:
@@ -32,4 +29,3 @@ spec:
       syncPolicy:
         automated:
           prune: false
-          selfHeal: false
