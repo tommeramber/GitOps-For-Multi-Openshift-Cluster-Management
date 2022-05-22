@@ -1,0 +1,9 @@
+{{- if .Values.required }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    openshift.io/display-name: OpenShift Compliance Operator
+    argocd.argoproj.io/hook: PreSync
+  name: openshift-compliance
+{{- end }}
