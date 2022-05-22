@@ -4,6 +4,9 @@ kind: ConfigMap
 metadata:
   name: user-ca-bundle
   namespace: openshift-config
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+    argocd.argoproj.io/compare-options: IgnoreExtraneous
 data:
   ca-bundle.crt: |
 {{ .Files.Get "files/ca.crt" | indent 4 }}
