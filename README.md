@@ -17,12 +17,31 @@ For each cluster we have (dev-ocp, test-ocp, prod-ocp, etc.) `values-<env>.yaml`
 
 Each yaml file in this chart starts with a Helm `if` statement that checks if this `required` field is set to `true`, and only if it does, it will create it with the values from the specific `values-<env>.yaml` file.
 
+In many cases you'll take existing charts/standard apps with multiple yaml files, and you'll want to apply the `if` statement to the beginning of all of them with a one-liner and the closing `end` to the end of them all; Run the following command to make it reality:
+```bash
+for file in /PATH/TO/CHART/templates/*; do \
+echo '{{- end }}' >> $file ;
+sed -i '1i{{- if .Values.required}}' $file ;
+done
+```
+
 ## Take advantage of ApplicationSets
 Argo ApplicationSet is an extension to the Kubernetes API provided by the ArgoCD operator.
 
 Argo ApplicationSet tells Argo how to create Argo Application based on a template.
 
 Using ApplicationSet object, we point ArgoCD to directories that hold our components. It will create Argo Application for each of our charts, based on the `values-<env>.yaml` file with for our specific environment.
+
+## Non-Cascade delete
+From the [ArgoCD site](https://argo-cd.readthedocs.io/en/stable/user-guide/app_deletion/)
+Apps can be deleted with or without a cascade option. A cascade delete, deletes both the app and its resources, rather than only the app. 
+To perform a non-cascade delete, make sure your applicationsets does not have the following lines:
+```yaml
+metadata:
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+```
+In this project non of our applicationsets has these lines because its purpose is Cluster Management and most of the objects that this Argo manges **should not/cannot be deleted by any means**
 
 ## Directories Structure 
 > This separation is only for convenience and based on my perspective, it is completely flexible and can be edited based on your needs, but don't forget to edit the [ApplicationSets in the following dir](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects/applicationsets)
