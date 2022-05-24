@@ -21,7 +21,7 @@ In many cases you'll take existing charts/standard apps with multiple yaml files
 ```bash
 for file in /PATH/TO/CHART/templates/*; do \
 echo '{{- end }}' >> $file ;
-sed -i '1i{{- if .Values.required}}' $file
+sed -i '1i{{- if .Values.required}}' $file ;
 done
 ```
 
