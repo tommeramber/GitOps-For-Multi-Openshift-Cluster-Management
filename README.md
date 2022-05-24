@@ -17,6 +17,14 @@ For each cluster we have (dev-ocp, test-ocp, prod-ocp, etc.) `values-<env>.yaml`
 
 Each yaml file in this chart starts with a Helm `if` statement that checks if this `required` field is set to `true`, and only if it does, it will create it with the values from the specific `values-<env>.yaml` file.
 
+In many cases you'll take existing charts/standard apps with multiple yaml files, and you'll want to apply the `if` statement to the beginning of all of them with a one-liner and the closing `end` to the end of them all; Run the following command to make it reality:
+```bash
+for file in /PATH/TO/CHART/templates/*; do
+sed -i '1i{{- if .Values.required}}' $file ;
+echo '{{- end }}' >> $file ;
+done
+```
+
 ## Take advantage of ApplicationSets
 Argo ApplicationSet is an extension to the Kubernetes API provided by the ArgoCD operator.
 
