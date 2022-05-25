@@ -11,6 +11,8 @@ spec:
       directories:
       - path: operators/*
       - path: operators/subs-and-customresources/*
+  syncPolicy:
+    preserveResourcesOnDeletion: true
   template:
     metadata:
       name: '{{path.basename}}'
@@ -25,9 +27,10 @@ spec:
           - values-dev-ocp.yaml
       destination:
         server: https://kubernetes.default.svc
-      syncPolicy:
-        automated:
-          prune: true
-          selfHeal: true
-        syncOptions:
-        - Replace=true
+      syncPolicy: {}
+      # Optional
+      #        automated:
+      #          prune: true
+      #          selfHeal: true
+      #        syncOptions:
+      #        - Replace=true

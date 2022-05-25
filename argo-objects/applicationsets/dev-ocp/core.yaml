@@ -12,6 +12,8 @@ spec:
       - path: core/*
       - path: core/rbac/*
       - path: core/jobs/*
+  syncPolicy:
+    preserveResourcesOnDeletion: true
   template:
     metadata:
       name: '{{path.basename}}'
@@ -26,8 +28,9 @@ spec:
           - values-dev-ocp.yaml
       destination:
         server: https://kubernetes.default.svc
-      syncPolicy:
-        automated: 
-          prune: true
-        syncOptions:
-        - Replace=true
+      syncPolicy: {}
+      # Optional
+      #        automated: 
+      #          prune: true
+      #        syncOptions:
+      #        - Replace=true

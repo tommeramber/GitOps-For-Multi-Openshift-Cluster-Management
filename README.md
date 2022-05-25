@@ -35,11 +35,10 @@ Using ApplicationSet object, we point ArgoCD to directories that hold our compon
 ## Non-Cascade delete
 From the [ArgoCD site](https://argo-cd.readthedocs.io/en/stable/user-guide/app_deletion/)
 Apps can be deleted with or without a cascade option. A cascade delete, deletes both the app and its resources, rather than only the app. 
-To perform a non-cascade delete, make sure your applicationsets does not have the following lines:
+To perform a non-cascade delete, make sure your applicationsets does have the following lines:
 ```yaml
-metadata:
-  finalizers:
-    - resources-finalizer.argocd.argoproj.io
+  syncPolicy:
+    preserveResourcesOnDeletion: true
 ```
 In this project non of our applicationsets has these lines because its purpose is Cluster Management and most of the objects that this Argo manges **should not/cannot be deleted by any means**
 
