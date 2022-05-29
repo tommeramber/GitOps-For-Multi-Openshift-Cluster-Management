@@ -27,9 +27,13 @@ done
 
 ## Youtube Demos!
 > Description in the video
+
 [Youtube - Demo 1](https://youtu.be/qF3ePOfpZ50) 
+
 [Youtube - Demo 2](https://youtu.be/15GJdQ2Lmy4)
+
 [Youtube - Demo 3](https://youtu.be/H7R_4VLVgwg)
+
 [Youtube - Demo 4](https://youtu.be/iRv0dKH7qi0)
 
 ## Take advantage of ApplicationSets
