@@ -1,0 +1,10 @@
+{{- if .Values.required }}
+apiVersion: operators.coreos.com/v1
+kind: OperatorGroup
+metadata:
+  name: compliance-operator
+  namespace: {{ .Chart.Name }}
+spec:
+  targetNamespaces:
+  - {{ .Chart.Name }}
+{{- end }}
