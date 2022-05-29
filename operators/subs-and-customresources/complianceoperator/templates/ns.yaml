@@ -1,7 +1,0 @@
-{{- if .Values.required }}
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: openshift-compliance
-spec: {}
-{{- end }}

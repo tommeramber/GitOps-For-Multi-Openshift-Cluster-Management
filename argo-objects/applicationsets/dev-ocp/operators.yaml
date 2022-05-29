@@ -27,7 +27,9 @@ spec:
           - values-dev-ocp.yaml
       destination:
         server: https://kubernetes.default.svc
-      syncPolicy: {}
+      syncPolicy: 
+        syncOptions:
+          - CreateNamespace=true
       # Optional
       #        automated:
       #          prune: true
