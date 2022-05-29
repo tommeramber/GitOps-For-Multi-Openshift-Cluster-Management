@@ -7,6 +7,6 @@ spec:
   machineConfigPoolSelector:
     matchLabels:
       custom-kubelet: large-pods
-    kubeletConfig:
-      maxPods: {{ .Values.pods }}
+  kubeletConfig:
+    maxPods: {{ .Values.pods }}
 {{- end }}
