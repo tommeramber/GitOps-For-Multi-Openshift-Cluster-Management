@@ -1,6 +1,8 @@
-required: true
-htpasswd: true
-
+required: false
 
 ########### Uncomment the following values when "htpasswd: true" ################
-htpasswdSecretName: my-htpasswd-secret
+#htpasswd: true
+#htpasswdSecretName: my-htpasswd-secret
+#
+########### For other options, add them to the template and create the relevant values that correlates ############
+

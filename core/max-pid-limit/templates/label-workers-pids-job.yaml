@@ -1,0 +1,24 @@
+{{- if .Values.required }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: label-workers-pids
+  namespace: openshift-gitops
+annotations:
+  argocd.argoproj.io/hook: PreSync
+  argocd.argoproj.io/hook-delete-policy: HookSucceeded
+spec:
+  template:
+    spec:
+      serviceAccountName: openshift-gitops-argocd-application-controller 
+      containers:
+      - name: label-workers-pids
+        image: {{ .Values.job.image }}
+        command:
+        - /bin/bash
+        - -c
+        args:
+        - |
+          oc label --overwrite machineconfigpool worker custom-crio=workers-high-pid-limit
+      restartPolicy: OnFailure
+{{- end }}

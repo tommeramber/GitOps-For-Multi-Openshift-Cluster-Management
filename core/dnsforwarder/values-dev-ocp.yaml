@@ -1,0 +1,9 @@
+## Change to true if required, and update the other values based on your network needs
+required: false
+env: dev
+upstreams:
+- ip.ip.ip.ip
+- ip.ip.ip.ip
+- ip.ip.ip.ip
+zones:
+- my.domain

@@ -1,0 +1,18 @@
+{{- if .Values.required }}
+apiVersion: operator.openshift.io/v1
+kind: DNS
+metadata:
+  name: default
+spec:
+  servers:
+  - name: {{ .Values.env }}-zones
+    zones:
+      {{- range .Values.zones }}
+      - {{ . -}}
+      {{- end}}
+    forwardPlugin:
+      upstreams: 
+        {{- range .Values.upstreams }}
+        - {{ . -}}
+        {{- end }}
+{{- end }}

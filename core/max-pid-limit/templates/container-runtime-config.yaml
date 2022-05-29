@@ -1,0 +1,12 @@
+{{- if .Values.required }}
+apiVersion: machineconfiguration.openshift.io/v1
+kind: ContainerRuntimeConfig
+metadata:
+  name: workers-set-pids-limit
+spec:
+  machineConfigPoolSelector:
+    matchLabels:
+      custom-crio: workers-high-pid-limit
+    containerRuntimeConfig:
+      pidsLimit: {{ .Values.pids }}
+{{- end }}
