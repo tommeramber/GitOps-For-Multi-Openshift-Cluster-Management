@@ -1,9 +1,0 @@
-{{- if .Values.required }}
-apiVersion: operators.coreos.com/v1
-kind: OperatorGroup
-metadata:
-  name: openshift-compliance
-spec:
-  targetNamespaces:
-    - openshift-compliance
-{{- end }}
