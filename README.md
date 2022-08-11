@@ -1,4 +1,4 @@
-# Intro
+ntro
 This project is a suggestion on who to use `ArgoCD` as your Central infrastructure & Configuration Management tool for Openshift & Kubernetes based environments by using `Openshift-GitOps` Operator and `Helm Charts`.
 
 # The Idea - Everything is Helm
@@ -10,22 +10,37 @@ The main advantage of incorporating ArgoCD with Helm charts is that we gain **fl
 
 For each component (i.e. OAuth, Etcd, APIServer, Proxy, Ingress, etc.) , we have its different declarative yaml file/s that tell Openshift how it should work; **By using Helm we can manage multiple Openshift Clusters with different configurations from a single ArgoCD instance.**
 
-## Example
-You can take a look at the following component: [etcd-encryption](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/core/etcd-encryption) which defines if the etcd of a specific cluster should be encrypted or not.
+In this project non of our applicationsets has these lines because its purpose is Cluster Management and most of the objects that this Argo manages **should not/cannot be deleted by any means**
 
-For each cluster we have (dev-ocp, test-ocp, prod-ocp, etc.) `values-<env>.yaml` in the specific chart directory, that holds the relevant values for this environment's needs. The most important value in this file is `required`.
+---
 
-Each yaml file in this chart starts with a Helm `if` statement that checks if this `required` field is set to `true`, and only if it does, it will create it with the values from the specific `values-<env>.yaml` file.
+# Instructions 
 
-In many cases you'll take existing charts/standard apps with multiple yaml files, and you'll want to apply the `if` statement to the beginning of all of them with a one-liner and the closing `end` to the end of them all; Run the following command to make it reality:
+1. Install Openshift-GitOps Operator
+
+2. Create the central ArgoCD instance in a dedicated Namespace
+> **Note!** From a security point of view, the main Openshift-GitOps instance is for infrastructure management purposes, which is equivalent to Openshift admin configuring the cluster.
+3. Generate a ServiceAccount in each remote cluster that ArgoCD will manage with elevated permissions and link it to the central ArgoCD instance
+
+* [Steps 1-3](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/Steps1-3)
+
+3. [Access the ArgoCD UI](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/LoginToArgo)
+
+4. [Add the repository to ArgoCD](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/AddRepoToArgo)
+
+5. Clone this repo and change the `values-<env>.yaml` files in the different components' directories based on your environment needs
+
+6. Apply the following files based on your env (dev-ocp, prod-ocp (pocp), etc.)
+
 ```bash
-for file in /PATH/TO/CHART/templates/*; do \
-echo '{{- end }}' >> $file ;
-sed -i '1i{{- if .Values.required}}' $file ;
-done
+$ cd ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/argo-objects
+$ oc apply -f projects
+# oc apply -f applicationsets/<env> 
+$ oc apply -f applicationsets/dev-ocp #Example
 ```
+---
 
-## Youtube Demos!
+# Youtube Demos!
 > Description in the video
 
 [Youtube - Demo 1](https://youtu.be/qF3ePOfpZ50) 
@@ -36,12 +51,30 @@ done
 
 [Youtube - Demo 4](https://youtu.be/iRv0dKH7qi0)
 
+---
+
+# Technical Overview
+
+## Directories Structure 
+> This separation is only for convenience and based on my perspective, it is completely flexible and can be edited based on your needs, but don't forget to edit the [ApplicationSets in the following dir](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects/applicationsets)
+
+We have 4 main directories relevant for this solution;
+1. [Core](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/core) - Every built-in component in Openshift/Kubernetes 
+2. [Operators](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/operators) - Everything related to OLM operators, including imageContentSourcePolicies (ICSP), catalogSources , Subscriptions, CustomResources relevant for the specific Operator, etc. 
+3. [Apps](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/apps) - Everything extra i.e. PersistentStorage 3rd Party CSI (e.g. Trident), helm operators / deployments for PaaS teams (e.g. Grafana, SealedSecrets, metricbeat, etc.)
+4. [Argo-Objects](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects) - **This is the main directory that we are going to use with this project**; It holds 2 things we must work within Argo - 
+
+   4.1. **Argo Projects** - Logical separation to envrionments inside Argo; It can be used purely for organizing your apps and you can grant access to other teams in your organization to specific projects. In our case there is going to be a project per repo dir (core, apps, operators).
+   
+   4.2. **Argo ApplicationSets** - Points ArgoCD to directories that holds our components, and it will create Argo Application for each of our charts, based on the `values-<env>.yaml` file for our specific environment. In our case there is going to be an applicationset per repo dir (core, apps, operators).
+
 ## Take advantage of ApplicationSets
 Argo ApplicationSet is an extension to the Kubernetes API provided by the ArgoCD operator.
 
 Argo ApplicationSet tells Argo how to create Argo Application based on a template.
 
-Using ApplicationSet object, we point ArgoCD to directories that hold our components. It will create Argo Application for each of our charts, based on the `values-<env>.yaml` file with for our specific environment.
+Using ApplicationSet object, we point ArgoCD to directories that hold our components. It will create Argo Application for each of our charts, based on the `values-<env>.yaml` file for our specific environment.
+
 
 ## Non-Cascade delete
 From the [ArgoCD site](https://argo-cd.readthedocs.io/en/stable/user-guide/app_deletion/)
@@ -51,38 +84,20 @@ To perform a non-cascade delete, make sure your applicationsets does have the fo
   syncPolicy:
     preserveResourcesOnDeletion: true
 ```
-In this project non of our applicationsets has these lines because its purpose is Cluster Management and most of the objects that this Argo manges **should not/cannot be deleted by any means**
 
-## Directories Structure 
-> This separation is only for convenience and based on my perspective, it is completely flexible and can be edited based on your needs, but don't forget to edit the [ApplicationSets in the following dir](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects/applicationsets)
+## Example
+You can take a look at the following component: [etcd-encryption](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/core/etcd-encryption) which defines if the etcd of a specific cluster should be encrypted or not.
 
-We have 4 main directories relevant for this solution;
-1. [Core](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/core) - Every built-in component in Openshift/Kubernetes 
-2. [Operators](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/operators) - Everything related to OLM operators, including imageContentSourcePolicies (ICSP), catalogSources , Subscriptions, CustomResources relevant for the specific Operator, etc. 
-3. [Apps](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/apps) - Everything extra i.e. PersistentStorage 3rd Party CSI (e.g. Trident), helm operators / deployments for PaaS teams (e.g. Grafana, SealedSecrets, metricbeat, etc.)
-4. [Argo-Objects](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects) - **This is the main directory that we are going to use with this project**; It holds 2 things we must work with in Argo - 
+For each cluster we have (dev-ocp, test-ocp, prod-ocp (pocp), etc.) `values-<env>.yaml` in the specific chart directory, that holds the relevant values for this environment's needs. The most important value in this file is `required`.
 
-   4.1. **Argo Projects** - Logical separation to envrionments inside Argo; It can be used purely for organizing your apps and you can grant access to other teams in your organization to specific projects. In our case there is going to be a project per repo dir (core, apps, operators).
-   
-   4.2. **Argo ApplicationSets** - Points ArgoCD to directories that holds our components, and it will create Argo Application for each of our charts, based on the `values-<env>.yaml` file with for our specific environment. In our case there is going to be an applicationset per repo dir (core, apps, operators).
+Each yaml file in this chart starts with a Helm `if` statement that checks if this `required` field is set to `true`, and only if it does, it will create it with the values from the specific `values-<env>.yaml` file.
 
-
-# Instructions 
-1. [Install the Openshift GitOps Operator](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/InstallOperator)
-2. Add cluster-admin permission to the main Openshift-GitOps serviceAccount
-> **Note!** From a security point of view, the main Openshift-GitOps instance is for infrastructure management purposes, which is equivalent to Openshift admin configuring the cluster.
+In many cases you'll take existing charts/standard apps with multiple yaml files, and you'll want to apply the `if` statement to the beginning of all of them with a one-liner and the closing `end` to the end of them all; Run the following command to make it a reality:
 ```bash
-$ oc adm policy add-cluster-role-to-user cluster-admin -z openshift-gitops-argocd-application-controller -n openshift-gitops
-```
-3. [Access the ArgoCD UI](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/LoginToArgo)
-4. [Add the repository to ArgoCD](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/AddRepoToArgo)
-5. Clone this repo and change the `values-<env>.yaml` files in the different components' directories based on your environment needs
-6. Apply the following files based on your env (dev-ocp, pocp, etc.)
-```bash
-$ cd ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/argo-objects
-$ oc apply -f projects
-# oc apply -f applicationsets/<env> 
-$ oc apply -f applicationsets/dev-ocp #Example
+for file in /PATH/TO/CHART/templates/*; do \
+echo '{{- end }}' >> $file ;
+sed -i '1i{{- if .Values.required}}' $file ;
+done
 ```
 ---
 
@@ -98,7 +113,7 @@ For each new component that you want to add to the cluster, you need to:
 ```bash
 $ helm create <NAME>
 ```
-3. Create `values-<env>.yaml` for each environment you want - dev-ocp, pocp, etc. with the proper variables for this component correlated to this environment.
+3. Create `values-<env>.yaml` for each environment you want - dev-ocp, prod-ocp (pocp), etc. with the proper variables for this component correlated to this environment.
 > The most important value is `required` that will define if the chart's objects should be deployed on this cluster or not.
 4. Create in the `templates` dir the yaml files that this component comprises. Each such yaml file should start with `{{- if .Values.required }}` and end with `{{- end }}`
 5. Run the following command in the directory where the files `Chart.yaml` and `values-<env>.yaml` are located, if it works, the chart is complete.
@@ -113,78 +128,78 @@ $ helm template . -f values-<env>.yaml
 ```
 .
 ├── apps
-│   ├── helm-operators
-│   │   ├── grafana
-│   │   └── sealedsecerts
-│   ├── metricbeat
-│   └── trident
+│   ├── helm-operators
+│   │   ├── grafana
+│   │   └── sealedsecerts
+│   ├── metricbeat
+│   └── trident
 ├── argo-objects
-│   ├── applicationsets
-│   │   └── dev-ocp
-│   │       ├── apps.yaml
-│   │       ├── core.yaml
-│   │       └── operators.yaml
-│   └── projects
-│       ├── apps.yaml
-│       ├── core.yaml
-│       └── operators.yaml
+│   ├── applicationsets
+│   │   └── dev-ocp
+│   │       ├── apps.yaml
+│   │       ├── core.yaml
+│   │       └── operators.yaml
+│   └── projects
+│       ├── apps.yaml
+│       ├── core.yaml
+│       └── operators.yaml
 ├── core
-│   ├── 500pods
-│   ├── dnsforwarder
-│   ├── etcd-encryption
-│   │   ├── Chart.yaml
-│   │   ├── templates
-│   │   │   └── apiserver.yaml
-│   │   └── values-dev-ocp.yaml
-│   ├── jobs
-│   │   ├── etcdbackup_cronjob
-│   │   └── ldap-sync
-│   ├── machine-config-pools
-│   ├── machineconfigs
-│   ├── oauth
-│   │   ├── Chart.yaml
-│   │   ├── files
-│   │   │   ├── create_htpasswd.sh
-│   │   │   └── htpasswd
-│   │   ├── templates
-│   │   │   ├── htpasswd-secret.yaml
-│   │   │   └── oauth.yaml
-│   │   └── values-dev-ocp.yaml
-│   ├── project-bootstrap-template
-│   ├── proxy
-│   │   ├── Chart.yaml
-│   │   ├── files
-│   │   │   ├── ca.crt
-│   │   │   ├── ca.key
-│   │   │   ├── create-ca.sh
-│   │   │   └── csr_answer.txt
-│   │   ├── templates
-│   │   │   ├── proxy.yaml
-│   │   │   └── user-ca-bundle.yaml
-│   │   └── values-dev-ocp.yaml
-│   ├── rbac
-│   │   ├── self-provisioner
-│   │   │   ├── Chart.yaml
-│   │   │   ├── templates
-│   │   │   │   └── disable-self-provisioners.yaml
-│   │   │   └── values-dev-ocp.yaml
-│   │   └── serviceaccounts
-│   └── scc
+│   ├── 500pods
+│   ├── dnsforwarder
+│   ├── etcd-encryption
+│   │   ├── Chart.yaml
+│   │   ├── templates
+│   │   │   └── apiserver.yaml
+│   │   └── values-dev-ocp.yaml
+│   ├── jobs
+│   │   ├── etcdbackup_cronjob
+│   │   └── ldap-sync
+│   ├── machine-config-pools
+│   ├── machineconfigs
+│   ├── oauth
+│   │   ├── Chart.yaml
+│   │   ├── files
+│   │   │   ├── create_htpasswd.sh
+│   │   │   └── htpasswd
+│   │   ├── templates
+│   │   │   ├── htpasswd-secret.yaml
+│   │   │   └── oauth.yaml
+│   │   └── values-dev-ocp.yaml
+│   ├── project-bootstrap-template
+│   ├── proxy
+│   │   ├── Chart.yaml
+│   │   ├── files
+│   │   │   ├── ca.crt
+│   │   │   ├── ca.key
+│   │   │   ├── create-ca.sh
+│   │   │   └── csr_answer.txt
+│   │   ├── templates
+│   │   │   ├── proxy.yaml
+│   │   │   └── user-ca-bundle.yaml
+│   │   └── values-dev-ocp.yaml
+│   ├── rbac
+│   │   ├── self-provisioner
+│   │   │   ├── Chart.yaml
+│   │   │   ├── templates
+│   │   │   │   └── disable-self-provisioners.yaml
+│   │   │   └── values-dev-ocp.yaml
+│   │   └── serviceaccounts
+│   └── scc
 └── operators
-    ├── catalogsources
-    ├── imagecontentsourcepolicies
-    └── subs-and-customresources
-        ├── gatekeeper
-        │   ├── Chart.yaml
-        │   ├── templates
-        │   │   ├── gatekeeper-instance.yaml
-        │   │   └── subscription.yaml
-        │   └── values-dev-ocp.yaml
-        └── monitoring
-            ├── Chart.yaml
-            ├── templates
-            │   └── cluster-monitoring-config.yaml
-            └── values-dev-ocp.yaml
+    ├── catalogsources
+    ├── imagecontentsourcepolicies
+    └── subs-and-customresources
+        ├── gatekeeper
+        │   ├── Chart.yaml
+        │   ├── templates
+        │   │   ├── gatekeeper-instance.yaml
+        │   │   └── subscription.yaml
+        │   └── values-dev-ocp.yaml
+        └── monitoring
+            ├── Chart.yaml
+            ├── templates
+            │   └── cluster-monitoring-config.yaml
+            └── values-dev-ocp.yaml
 ```
 
 
