@@ -1,4 +1,4 @@
-nstall everything from scratch  
+# Install everything from scratch  
 1. Install `argocd cli` locally - you can get it from here: https://argo-cd.readthedocs.io/en/stable/cli_installation/
 0. Create a dedicated `multicluster-mgmt-argocd` namespace
 ```bash
