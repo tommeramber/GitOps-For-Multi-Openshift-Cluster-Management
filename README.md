@@ -1,4 +1,4 @@
-ntro
+# Intro
 This project is a suggestion on who to use `ArgoCD` as your Central infrastructure & Configuration Management tool for Openshift & Kubernetes based environments by using `Openshift-GitOps` Operator and `Helm Charts`.
 
 # The Idea - Everything is Helm
