@@ -22,7 +22,7 @@ In this project non of our applicationsets has these lines because its purpose i
 > **Note!** From a security point of view, the main Openshift-GitOps instance is for infrastructure management purposes, which is equivalent to Openshift admin configuring the cluster.
 3. Generate a ServiceAccount in each remote cluster that ArgoCD will manage with elevated permissions and link it to the central ArgoCD instance
 
-* [Steps 1-3](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/Steps1-3)
+* [Steps 1-3](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/Steps1-3.md)
 
 3. [Access the ArgoCD UI](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/LoginToArgo)
 
