@@ -35,7 +35,7 @@ echo "<PASTE_SECRET_HERE>" |base64 -d
 > Add all the OCP clusters that this Argo will manage, including the one it runs on
 ---
 
-# Add a central cluster to ArgoCD management
+# Add the central cluster to ArgoCD management
 1. Login into argocd using cli as admin
 ```bash
 argocd login argocd-server-xxx.XXXXXXX:443
@@ -45,7 +45,6 @@ argocd login argocd-server-xxx.XXXXXXX:443
 export KUBECONFIG=/tmp/kubeconfig
 oc config get-clusters
 oc config get-contexts
-oc config set-context argocd --cluster=XXXXXXXX:6443 --user=argocd
 ```
 3. Add cluster
 ```bash
