@@ -44,6 +44,7 @@ argocd login argocd-server-xxx.XXXXXXX:443
 ```bash
 export KUBECONFIG=/tmp/kubeconfig
 oc config get-clusters
+oc config get-contexts
 oc config set-context main-ocp --cluster=XXXXXXXX:6443 --user=argocd
 ```
 3. Add cluster
