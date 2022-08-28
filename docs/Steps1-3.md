@@ -65,18 +65,14 @@ oc adm policy add-cluster-role-to-user cluster-admin -z argocd -n managed-by-arg
 ```
 2. Retrieve kubeconfig from UI for the sa
 * User Management -> service accounts -> 3 dots next to user -> download kubeconfig
-* Copy to server under /tmp/kubeconfig
+* Copy to the **Main OCP Bastion** under /tmp/remote-kubeconfig-X
 
-3. Login into your remote argocd using cli as admin
+3. Set context:
 ```bash
-argocd login argocd-server-xxx.XXXXXX:443
+export KUBECONFIG=/tmp/remote-kubeconfig-1
 ```
-4. Set context:
+4. Add the cluster
 ```bash
-export KUBECONFIG=/tmp/<ENV>-kubeconfig
-oc config set-context <ENV> --cluster=XXXXXXXX:6443 --user=argocd
-```
-5. Add the cluster
-```bash
-argocd cluster add --kubeconfig=/tmp/<ENV>-kubeconfig <ENV> --system-namespace=managed-by-argocd
+argocd cluster add --kubeconfig=/tmp/kubeconfig2 argocd --name=remote-cluster-1 --system-namespace=managed-by-argocd
+
 ```
