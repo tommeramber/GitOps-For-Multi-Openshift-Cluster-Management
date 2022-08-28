@@ -3,6 +3,7 @@
 0. Create a dedicated `multicluster-mgmt-argocd` namespace
 ```bash
 oc create ns multicluster-mgmt-argocd
+oc project multicluster-mgmt-argocd
 ```
 1. Clone this repo
 2. [Install Openshift-GitOps Operator via OperatorHub](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/InstallOperator)
@@ -14,7 +15,7 @@ oc delete ns openshift-gitops
 4. Deploy Argo instance in the `multicluster-mgmt-argocd` namespace and give its ServiceAccount `cluster-admin` permissions
 ```bash
 oc apply -f argo-objects/argo/argocd.yaml
-oc create sa argocd
+oc create sa argocd 
 oc adm policy add-cluster-role-to-user cluster-admin -z argocd
 oc delete appproject default
 ```
@@ -55,6 +56,7 @@ argocd cluster add --kubeconfig=/tmp/kubeconfig argocd --name=main-cluster --sys
 0. Create the `managed-by-argocd` namespace
 ```bash
 oc create ns managed-by-argocd
+oc project managed-by-argocd
 ```
 1. Create ServiceAccount that your remote Argo will use
 ```base
