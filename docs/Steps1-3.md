@@ -69,10 +69,10 @@ oc adm policy add-cluster-role-to-user cluster-admin -z argocd -n managed-by-arg
 
 3. Set context:
 ```bash
-export KUBECONFIG=/tmp/remote-kubeconfig-1
+export KUBECONFIG=/tmp/remote-kubeconfig-X
 ```
 4. Add the cluster
 ```bash
-argocd cluster add --kubeconfig=/tmp/kubeconfig2 argocd --name=remote-cluster-1 --system-namespace=managed-by-argocd
+argocd cluster add --kubeconfig=/tmp/remote-kubeconfig-X argocd --name=remote-cluster-X --system-namespace=managed-by-argocd
 
 ```
