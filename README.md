@@ -22,21 +22,38 @@ In this project non of our applicationsets has these lines because its purpose i
 > **Note!** From a security point of view, the main Openshift-GitOps instance is for infrastructure management purposes, which is equivalent to Openshift admin configuring the cluster.
 3. Generate a ServiceAccount in each remote cluster that ArgoCD will manage with elevated permissions and link it to the central ArgoCD instance
 
-* [Steps 1-3](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/Steps1-3.md)
+* [Steps 1-3](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/docs/Steps1-3.md)
 
-3. [Access the ArgoCD UI](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/LoginToArgo)
+3. [Access the ArgoCD UI](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/docs/LoginToArgo)
 
-4. [Add the repository to ArgoCD](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/AddRepoToArgo)
+4. [Fork this Repo and add the repository to ArgoCD](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/docs/AddRepoToArgo)
 
-5. Clone this repo and change the `values-<env>.yaml` files in the different components' directories based on your environment needs
+5. Run the following commands to change the applicationsets so they will correlate with your clusters:
+```bash
+cd argo-objects/applicationsets/dev-ocp
+sed -i 's,https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure.git,<YOUR FORKED REPO!!!>,g' *
+sed -i 's,https://kubernetes.default.svc,<YOU **DEV** CLUSTER>,g' *
+sed -i 's,name: apps, name: apps-dev,g' 
+sed -i 's,name: operators, name: operators-dev,g' 
+sed -i 's,name: core, name: core-dev,g' 
+
+cd argo-objects/applicationsets/prod-ocp
+sed -i 's,https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure.git,<YOUR FORKED REPO!!!>,g' *
+sed -i 's,https://kubernetes.default.svc,<YOU **PROD** CLUSTER>,g' *
+sed -i 's,name: apps, name: apps-prod,g' 
+sed -i 's,name: operators, name: operators-prod,g' 
+sed -i 's,name: core, name: core-prod,g' 
+```
+
+6. Change the `values-<env>-ocp.yaml` files in the different components' directories based on your environment needs
 
 6. Apply the following files based on your env (dev-ocp, prod-ocp (pocp), etc.)
 
 ```bash
-$ cd ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/argo-objects
+$ cd GitOps-For-Multi-Openshift-Cluster-Management/argo-objects
 $ oc apply -f projects
-# oc apply -f applicationsets/<env> 
-$ oc apply -f applicationsets/dev-ocp #Example
+# oc apply -f applicationsets/<env>/. 
+$ oc apply -f applicationsets/dev-ocp/. #Example
 ```
 ---
 
@@ -56,13 +73,13 @@ $ oc apply -f applicationsets/dev-ocp #Example
 # Technical Overview
 
 ## Directories Structure 
-> This separation is only for convenience and based on my perspective, it is completely flexible and can be edited based on your needs, but don't forget to edit the [ApplicationSets in the following dir](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects/applicationsets)
+> This separation is only for convenience and based on my perspective, it is completely flexible and can be edited based on your needs, but don't forget to edit the [ApplicationSets in the following dir](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/argo-objects/applicationsets)
 
 We have 4 main directories relevant for this solution;
-1. [Core](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/core) - Every built-in component in Openshift/Kubernetes 
-2. [Operators](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/operators) - Everything related to OLM operators, including imageContentSourcePolicies (ICSP), catalogSources , Subscriptions, CustomResources relevant for the specific Operator, etc. 
-3. [Apps](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/apps) - Everything extra i.e. PersistentStorage 3rd Party CSI (e.g. Trident), helm operators / deployments for PaaS teams (e.g. Grafana, SealedSecrets, metricbeat, etc.)
-4. [Argo-Objects](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/argo-objects) - **This is the main directory that we are going to use with this project**; It holds 2 things we must work within Argo - 
+1. [Core](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/core) - Every built-in component in Openshift/Kubernetes 
+2. [Operators](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/operators) - Everything related to OLM operators, including imageContentSourcePolicies (ICSP), catalogSources , Subscriptions, CustomResources relevant for the specific Operator, etc. 
+3. [Apps](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/apps) - Everything extra i.e. PersistentStorage 3rd Party CSI (e.g. Trident), helm operators / deployments for PaaS teams (e.g. Grafana, SealedSecrets, metricbeat, etc.)
+4. [Argo-Objects](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/argo-objects) - **This is the main directory that we are going to use with this project**; It holds 2 things we must work within Argo - 
 
    4.1. **Argo Projects** - Logical separation to envrionments inside Argo; It can be used purely for organizing your apps and you can grant access to other teams in your organization to specific projects. In our case there is going to be a project per repo dir (core, apps, operators).
    
@@ -86,7 +103,7 @@ To perform a non-cascade delete, make sure your applicationsets does have the fo
 ```
 
 ## Example
-You can take a look at the following component: [etcd-encryption](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/core/etcd-encryption) which defines if the etcd of a specific cluster should be encrypted or not.
+You can take a look at the following component: [etcd-encryption](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/core/etcd-encryption) which defines if the etcd of a specific cluster should be encrypted or not.
 
 For each cluster we have (dev-ocp, test-ocp, prod-ocp (pocp), etc.) `values-<env>.yaml` in the specific chart directory, that holds the relevant values for this environment's needs. The most important value in this file is `required`.
 
@@ -205,4 +222,4 @@ $ helm template . -f values-<env>.yaml
 
 # Tips & Tricks
 
-1. [IgnoreExtraneous](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/IgnoreExtraneous)
+1. [IgnoreExtraneous](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/docs/IgnoreExtraneous)
