@@ -48,7 +48,7 @@ oc config get-contexts
 ```
 3. Add cluster
 ```bash
-argocd cluster add --kubeconfig=/tmp/kubeconfig argocd --system-namespace=multicluster-mgmt-argocd
+argocd cluster add --kubeconfig=/tmp/kubeconfig argocd --name=main-cluster --system-namespace=multicluster-mgmt-argocd
 ```
 
 # Add a new cluster to ArgoCD
