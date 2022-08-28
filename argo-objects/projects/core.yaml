@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
   name: core 
-  namespace: openshift-gitops
+  namespace: multicluster-mgmt-argocd
 spec:
   clusterResourceWhitelist:
   - group: '*'
