@@ -3,14 +3,14 @@ apiVersion: batch/v1
 kind: Job
 metadata:
   name: label-workers-pids
-  namespace: openshift-gitops
+  namespace: multicluster-mgmt-argocd
   annotations:
     argocd.argoproj.io/hook: PreSync
     argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   template:
     spec:
-      serviceAccountName: openshift-gitops-argocd-application-controller 
+      serviceAccountName: argocd 
       containers:
       - name: label-workers-pids
         image: {{ .Values.job.image }}
