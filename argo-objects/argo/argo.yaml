@@ -4,7 +4,10 @@ metadata:
   name: argocd
   namespace: multicluster-mgmt-argocd
 spec:
+  applicationSet:
+    logLevel: debug
   controller:
+    logLevel: debug
     processors: {}
     resources:
       limits:
@@ -75,6 +78,7 @@ spec:
         cpu: 250m
         memory: 256Mi
   server:
+    logLevel: debug
     autoscale:
       enabled: false
     grpc:
