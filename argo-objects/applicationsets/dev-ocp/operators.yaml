@@ -11,6 +11,8 @@ spec:
       directories:
       - path: operators/*
       - path: operators/subs-and-customresources/*
+      - path: operators/subs-and-customresources
+        exclude: true
   syncPolicy:
     preserveResourcesOnDeletion: true
   template:

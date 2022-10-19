@@ -11,6 +11,8 @@ spec:
       directories:
       - path: apps/*
       - path: apps/helm-operators/*
+      - path: apps/helm-operators
+        exclude: true
   syncPolicy:
     preserveResourcesOnDeletion: true
   template:

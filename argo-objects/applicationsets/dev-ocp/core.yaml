@@ -11,7 +11,11 @@ spec:
       directories:
       - path: core/*
       - path: core/rbac/*
+      - path: core/rbac
+        exclude: true
       - path: core/jobs/*
+      - path: core/jobs
+        exclude: true
   syncPolicy:
     preserveResourcesOnDeletion: true
   template:
