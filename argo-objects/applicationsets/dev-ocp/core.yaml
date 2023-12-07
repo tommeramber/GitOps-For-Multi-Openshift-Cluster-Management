@@ -2,7 +2,7 @@ apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
   name: core
-  namespace: multicluster-mgmt-argocd
+  namespace: openshift-gitops
 spec:
   generators:
   - git:
