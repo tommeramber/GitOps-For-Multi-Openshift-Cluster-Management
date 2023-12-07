@@ -6,7 +6,7 @@ metadata:
 spec:
   generators:
   - git:
-      repoURL: https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure.git 
+      repoURL: https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management.git 
       revision: HEAD
       directories:
       - path: operators/*
@@ -21,7 +21,7 @@ spec:
     spec:
       project: operators
       source:
-        repoURL: https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure.git
+        repoURL: https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management.git
         targetRevision: HEAD
         path: '{{path}}'
         helm:

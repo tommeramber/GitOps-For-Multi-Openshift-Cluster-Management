@@ -1,5 +1,5 @@
 # Instructions
-1. [Login to ArgoCD](https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure/tree/main/docs/LoginToArgo)
+1. [Login to ArgoCD](https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management/tree/main/docs/LoginToArgo)
 2. Go to the `Settings` page => press `Repositories`
 ![Screenshot from 2022-05-22 10-57-33](https://user-images.githubusercontent.com/60185557/169691287-ae1e688e-5b9d-4366-a5ac-c129f85215a6.png)
 

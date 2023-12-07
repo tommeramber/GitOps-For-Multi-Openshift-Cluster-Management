@@ -31,14 +31,14 @@ In this project non of our applicationsets has these lines because its purpose i
 5. Run the following commands to change the applicationsets so they will correlate with your clusters:
 ```bash
 cd argo-objects/applicationsets/dev-ocp
-sed -i 's,https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure.git,<YOUR FORKED REPO!!!>,g' *
+sed -i 's,https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management.git,<YOUR FORKED REPO!!!>,g' *
 sed -i 's,https://kubernetes.default.svc,<YOU **DEV** CLUSTER>,g' *
 sed -i 's,name: apps, name: apps-dev,g' 
 sed -i 's,name: operators, name: operators-dev,g' 
 sed -i 's,name: core, name: core-dev,g' 
 
 cd argo-objects/applicationsets/prod-ocp
-sed -i 's,https://github.com/tommeramber/ArgoCD-GitOps-Helm-Based-Multi-Cluster-Structure.git,<YOUR FORKED REPO!!!>,g' *
+sed -i 's,https://github.com/tommeramber/GitOps-For-Multi-Openshift-Cluster-Management.git,<YOUR FORKED REPO!!!>,g' *
 sed -i 's,https://kubernetes.default.svc,<YOU **PROD** CLUSTER>,g' *
 sed -i 's,name: apps, name: apps-prod,g' 
 sed -i 's,name: operators, name: operators-prod,g' 
